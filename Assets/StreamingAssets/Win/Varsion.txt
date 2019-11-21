@@ -1,0 +1,2 @@
+Varsion:1.0.0
+C:/Users/Administrator/Desktop/Unity_Lua_Study/Assets/OutPut/Win/game_lua/init.data	2351433215

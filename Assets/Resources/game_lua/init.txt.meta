@@ -3,5 +3,5 @@ guid: 05a848f8b4dae004184385035298a39e
 TextScriptImporter:
   externalObjects: {}
   userData: 
-  assetBundleName: 
+  assetBundleName: game_lua/init.data
   assetBundleVariant: 

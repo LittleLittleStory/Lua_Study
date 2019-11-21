@@ -132,7 +132,6 @@
     <Compile Include="Assets\Source\Generate\UnityEngine_WrapModeWrap.cs" />
     <Compile Include="Assets\Source\Generate\UnityEngine_WWWWrap.cs" />
     <Compile Include="Assets\Source\LuaConst.cs" />
-    <Compile Include="Assets\Test.cs" />
     <Compile Include="Assets\ToLua\BaseType\LuaInterface_EventObjectWrap.cs" />
     <Compile Include="Assets\ToLua\BaseType\LuaInterface_LuaConstructorWrap.cs" />
     <Compile Include="Assets\ToLua\BaseType\LuaInterface_LuaFieldWrap.cs" />
@@ -190,12 +189,14 @@
     <Compile Include="Assets\ToLua\Reflection\LuaMethod.cs" />
     <Compile Include="Assets\ToLua\Reflection\LuaProperty.cs" />
     <Compile Include="Assets\ToLua\Reflection\LuaReflection.cs" />
-    <None Include="Assets\link.xml" />
+    <None Include="Assets\OutPut\Win\Varsion.txt" />
+    <None Include="Assets\Resources\game_lua\LuaStudy.lua.txt" />
     <None Include="Assets\Resources\game_lua\init.txt" />
     <None Include="Assets\ToLua\Injection\InjectionBridgeEditorInfo.xml" />
     <None Include="Assets\ToLua\readme.txt" />
     <None Include="Assets\ToLua\Injection\LuaInjectionSkipPaths.txt" />
     <None Include="Assets\ToLua\Injection\InjectionBlackList.txt" />
+    <None Include="Assets\StreamingAssets\Win\Varsion.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

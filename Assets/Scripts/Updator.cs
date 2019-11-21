@@ -6,7 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 //版本检查，用于检查本地文件和服务器文件的CRC
-public class Updator : MonoBehaviour {
+public class Updator : MonoBehaviour
+{
     private static Dictionary<string, string> strLocalDicFiles = new Dictionary<string, string>();   //本地CRC校验码表
     private static Dictionary<string, string> strSeverDicFiles = new Dictionary<string, string>();   //服务器CRC校验码表
     private static List<string> DiffFiles = new List<string>();    //有差异的文件
@@ -14,12 +15,12 @@ public class Updator : MonoBehaviour {
     private static List<string> BaseResFiles = new List<string>();  //基础游戏资源
 
     //private string SeverPath = "file://D:/FTPUpdate";
-    private string SeverPath = "http://192.168.1.7/StreamingAssets/";
+    private string SeverPath = "http://192.168.1.7/OutPut/";
 
     private bool bUpDateRes = true;    //是否检查更新(无外网测试时使用)
 
     private string strLocalVarsion = "";
-    private string strServerVarsion = ""; 
+    private string strServerVarsion = "";
 
     private bool bLoadEnd = false;
 
@@ -42,14 +43,13 @@ public class Updator : MonoBehaviour {
 
     private bool bOnCopyBaseFile = false;
 
-   // private bool bUnZipRes = true;
+    // private bool bUnZipRes = true;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         var dec = ResourceManager.GetInstance().GetResPath();
-        if (GameObject.Find("Log")!=null)
-            LogText = GameObject.Find("Log").GetComponent<Text>();
-        OnLog("开始检查资源");
+        Debug.Log("开始检查资源");
         if (ResourceManager.GetInstance().bLoadFromStream)
         {
             CopyLoaclRes();
@@ -58,23 +58,24 @@ public class Updator : MonoBehaviour {
         {
             this.enabled = false;
 
-             //if(Application.platform == RuntimePlatform.Android)
-             //    gameObject.AddComponent<TestABLoader>();
-             //else
-           // if (Application.platform == RuntimePlatform.Android)
+            //if(Application.platform == RuntimePlatform.Android)
+            //    gameObject.AddComponent<TestABLoader>();
+            //else
+            // if (Application.platform == RuntimePlatform.Android)
             //{
             //    gameObject.AddComponent<TestABLoader>();
-           // }
+            // }
             //else
             //    gameObject.AddComponent<Load>();
             //ResourceManager.GetInstance().Init();
-             //gameObject.AddComponent<Load>();
+            //gameObject.AddComponent<Load>();
 
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         if (!bCopyBaseFiles)
         {
             if (bUpDateRes)
@@ -121,13 +122,13 @@ public class Updator : MonoBehaviour {
                         string strPath = "/Android/";
                         string strRootFile = "Android";
                         string strRootmainfast = "Android.manifest";
-                        if (Application.platform == RuntimePlatform.WindowsPlayer|| Application.platform == RuntimePlatform.WindowsEditor)
+                        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
                         {
                             strPath = "/Win/";
                             strRootFile = "Win";
                             strRootmainfast = "Win.manifest";
                         }
- 
+
                         string strSarvarAndroidPath = SeverPath + strPath + strRootFile;
                         Debug.Log("开始下载:" + strSarvarAndroidPath);
                         iLoadingFileNum++;
@@ -157,8 +158,8 @@ public class Updator : MonoBehaviour {
                         {
                             //gameObject.AddComponent<TestABLoader>();
                         }
-                       // else
-                       //     gameObject.AddComponent<Load>();
+                        // else
+                        //     gameObject.AddComponent<Load>();
                     }
                 }
                 else if (!bLinkServer)
@@ -179,20 +180,20 @@ public class Updator : MonoBehaviour {
                 {
                     //gameObject.AddComponent<TestABLoader>();
                 }
-               // else
-               //     gameObject.AddComponent<Load>();
+                // else
+                //     gameObject.AddComponent<Load>();
             }
         }
-	}
+    }
 
     //IEnumerator
-     void   LoadLocalCRCDic()
+    void LoadLocalCRCDic()
     {
         /*
         //"file://"
         */
         string strPath = "/Android/";
-        if (Application.platform == RuntimePlatform.WindowsPlayer|| Application.platform == RuntimePlatform.WindowsEditor)
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
             strPath = "/Win/";
         }
@@ -232,7 +233,7 @@ public class Updator : MonoBehaviour {
     IEnumerator LoadSeverCRCDic()
     {
         string strPath = "/Android/";
-        if (Application.platform == RuntimePlatform.WindowsPlayer|| Application.platform == RuntimePlatform.WindowsEditor)
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
             strPath = "/Win/";
         }
@@ -290,7 +291,7 @@ public class Updator : MonoBehaviour {
     public static IEnumerator DownloadAndSave(string url, string name, Action<bool, string> Finish = null)
     {
         string strPath = "/Android";
-        if (Application.platform == RuntimePlatform.WindowsPlayer|| Application.platform == RuntimePlatform.WindowsEditor)
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
             strPath = "/Win";
         }
@@ -314,14 +315,13 @@ public class Updator : MonoBehaviour {
         }
         if (www.isDone)
         {
+            Debug.Log(name + ":下载完成");
             Loading = "100%";
             byte[] bytes = www.bytes;
+            b = SaveAssets(ResourceManager.GetInstance().GetResPath() + strPath, name, bytes);
+            if (Finish != null)
             {
-                b = SaveAssets(ResourceManager.GetInstance().GetResPath() + strPath, name, bytes);
-                if (Finish != null)
-                {
-                    Finish(b, Loading);
-                }
+                Finish(b, Loading);
             }
         }
     }
@@ -335,50 +335,46 @@ public class Updator : MonoBehaviour {
     /// <param name="length"></param>
     public static bool SaveAssets(string path, string name, byte[] bytes)
     {
-        string FullPath = path + "//" + name;
-        CheckDirectory(FullPath);
+        //string FullPath = path + "//" + name;
+        CheckDirectory(name);
 
-        Stream sw;
-        FileInfo t = new FileInfo(path + "//" + name);
-        //if (!t.Exists)
+        FileStream sw;
+        //FileInfo t = new FileInfo(path + "//" + name);
+        try
         {
-            try
-            {
-                sw = t.Create();
-                sw.Write(bytes, 0, bytes.Length);
-                sw.Close();
-                sw.Dispose();
+            sw = new FileStream(path + "/" + name, FileMode.OpenOrCreate);
+            //sw = sw.Create();
+            sw.Write(bytes, 0, bytes.Length);
+            sw.Close();
+            sw.Dispose();
 
-                iLoadingFileNum--;
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            iLoadingFileNum--;
+            Debug.Log(name + ":保存成功");
+            return true;
         }
-       // else
-       // {
-       //     return true;
-       // }
+        catch( Exception ex)
+        {
+            Debug.Log(ex);
+            return false;
+        }
     }
 
     //从服务器下载有差异的文件
     void DownloadDiffFile()
     {
         string strPath = "/Android/";
-        if (Application.platform == RuntimePlatform.WindowsPlayer|| Application.platform == RuntimePlatform.WindowsEditor)
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
             strPath = "/Win/";
         }
-        if (iLoadingFileNum==0)
+        if (iLoadingFileNum == 0)
         {
             if (DiffFiles.Count == 0)
                 return;
             string strFile = DiffFiles[0];
             string strSarvarPath = SeverPath + strPath + strFile;
-   
-            Debug.Log("开始下载:"+ strFile);
+
+            Debug.Log("开始下载:" + strFile);
             iLoadingFileNum++;
             StartCoroutine(DownloadAndSave(strSarvarPath, strFile));
             //同时下载.mainfast文件
@@ -409,9 +405,9 @@ public class Updator : MonoBehaviour {
     {
         OnLog("读取原始包资源！！");
         string sPath = "";
-        if(Application.platform == RuntimePlatform.WindowsEditor|| Application.platform == RuntimePlatform.WindowsPlayer)
+        if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             sPath = "file://" + Application.streamingAssetsPath + "/" + "BaseFileInfo.txt";
-        else if(Application.platform ==  RuntimePlatform.Android)
+        else if (Application.platform == RuntimePlatform.Android)
             sPath = Application.streamingAssetsPath + "/" + "BaseFileInfo.txt";
         WWW www = new WWW(sPath);
         while (!www.isDone) { }
@@ -463,7 +459,7 @@ public class Updator : MonoBehaviour {
             bCopyBaseFiles = false;
         }
     }
-    void  CopyBaseFilesInfo()
+    void CopyBaseFilesInfo()
     {
         StartCoroutine(CopyBaseFilesToPerDir());
 
@@ -476,14 +472,14 @@ public class Updator : MonoBehaviour {
         {
             if (!bOnCopyBaseFile)
             {
-                if (CurBaseFileIndex<BaseResFiles.Count)
+                if (CurBaseFileIndex < BaseResFiles.Count)
                 {
                     bOnCopyBaseFile = true;
                     string FileName = BaseResFiles[CurBaseFileIndex].Replace("\r", "");
                     var sec = "";
-                    if(Application.platform == RuntimePlatform.WindowsEditor)
+                    if (Application.platform == RuntimePlatform.WindowsEditor)
                         sec = "file://" + Application.streamingAssetsPath + FileName;
-                    else if(Application.platform == RuntimePlatform.Android)
+                    else if (Application.platform == RuntimePlatform.Android)
                         sec = Application.streamingAssetsPath + FileName;
                     var dec = ResourceManager.GetInstance().GetResPath() + FileName;
 
@@ -500,7 +496,7 @@ public class Updator : MonoBehaviour {
     IEnumerator CopyBFiles(string name)
     {
         var sec = "";
-        if (Application.platform == RuntimePlatform.WindowsEditor|| Application.platform == RuntimePlatform.WindowsPlayer)
+        if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             sec = "file://" + Application.streamingAssetsPath + name;
         else if (Application.platform == RuntimePlatform.Android)
             sec = Application.streamingAssetsPath + name;
@@ -511,16 +507,16 @@ public class Updator : MonoBehaviour {
         iCopyBaseFileNum++;
 
         Debug.Log("拷贝文件:" + name);
-        OnLog("拷贝文件："+ name);
+        OnLog("拷贝文件：" + name);
 
         SaveBaseFile(www.bytes, dec);
 
-        if (iCopyBaseFileNum== BaseResFiles.Count)
+        if (iCopyBaseFileNum == BaseResFiles.Count)
             bCopyBaseFiles = false;
         bOnCopyBaseFile = false;
     }
 
-    void SaveBaseFile(byte[] bytes,  string decDic)
+    void SaveBaseFile(byte[] bytes, string decDic)
     {
         string FullPath = decDic;
 
