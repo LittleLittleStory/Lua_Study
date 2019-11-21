@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{788366D9-7B6E-B108-3F73-BBCBF1024D1A}</ProjectGuid>
+    <ProjectGuid>{47828875-D0E7-6B84-839C-97A5128D3CED}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -62,6 +62,8 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\EventTriggerListener.cs" />
     <Compile Include="Assets\Scripts\LuaManager.cs" />
+    <Compile Include="Assets\Scripts\ResourceManager.cs" />
+    <Compile Include="Assets\Scripts\Updator.cs" />
     <Compile Include="Assets\Source\Generate\DelegateFactory.cs" />
     <Compile Include="Assets\Source\Generate\EventTriggerListenerWrap.cs" />
     <Compile Include="Assets\Source\Generate\LuaBinder.cs" />
@@ -195,19 +197,19 @@
     <None Include="Assets\ToLua\Injection\LuaInjectionSkipPaths.txt" />
     <None Include="Assets\ToLua\Injection\InjectionBlackList.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/学习框架/Lua_Study/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/学习框架/Lua_Study/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/学习框架/Lua_Study/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/学习框架/Lua_Study/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/学习框架/Lua_Study/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/Unity2018.3.6f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -411,19 +413,19 @@
       <HintPath>D:/Unity2018.3.6f1/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="CString">
-      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/学习框架/Lua_Study/Assets/Plugins/CString.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/Assets/Plugins/CString.dll</HintPath>
     </Reference>
     <Reference Include="Debugger">
-      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/学习框架/Lua_Study/Assets/Plugins/Debugger.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/Assets/Plugins/Debugger.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
-      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/学习框架/Lua_Study/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/学习框架/Lua_Study/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/学习框架/Lua_Study/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
+      <HintPath>C:/Users/Administrator/Desktop/Unity_Lua_Study/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>D:/Unity2018.3.6f1/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>
