@@ -192,6 +192,7 @@
     <Compile Include="Assets\ToLua\Reflection\LuaMethod.cs" />
     <Compile Include="Assets\ToLua\Reflection\LuaProperty.cs" />
     <Compile Include="Assets\ToLua\Reflection\LuaReflection.cs" />
+    <None Include="Assets\Resources\LuaDebug.lua.txt" />
     <None Include="Assets\OutPut\Win\Varsion.txt" />
     <None Include="Assets\Resources\game_lua\init.txt" />
     <None Include="Assets\ToLua\Injection\InjectionBridgeEditorInfo.xml" />

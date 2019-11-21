@@ -47,9 +47,10 @@ public class LuaManager : MonoBehaviour
 
         foreach (var item in luaFileList)
         {
-            Debug.Log("初始化脚本:" + item);
             luaState.Require(item);
+            Debug.Log("初始化脚本:" + item);
         }
+        CallLuaFunction("Main.Start");
     }
 
     //读取lua的初始化配置
@@ -71,17 +72,18 @@ public class LuaManager : MonoBehaviour
     //Lua方法执行
     public void CallLuaFunction(string name)
     {
+        LuaFunction function = luaState.GetFunction(name);
+        if (function != null)
+        {
+            function.Call();
+        }
+        else
+        {
+            Debug.LogError("没有找到lua方法!" + name);
+        }
         try
         {
-            LuaFunction function = luaState.GetFunction(name);
-            if (function != null)
-            {
-                function.Call();
-            }
-            else
-            {
-                Debug.LogError("没有找到lua方法!" + name);
-            }
+
         }
         catch (Exception ex)
         {
