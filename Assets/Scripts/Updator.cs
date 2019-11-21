@@ -15,7 +15,7 @@ public class Updator : MonoBehaviour
     private static List<string> BaseResFiles = new List<string>();  //基础游戏资源
 
     //private string SeverPath = "file://D:/FTPUpdate";
-    private string SeverPath = "http://192.168.1.7/OutPut/";
+    private string SeverPath = "http://192.168.2.103/OutPut/";
 
     private bool bUpDateRes = true;    //是否检查更新(无外网测试时使用)
 
@@ -80,7 +80,6 @@ public class Updator : MonoBehaviour
         {
             if (bUpDateRes)
             {
-
                 if (strSeverDicFiles.Count != 0 && strLocalDicFiles.Count != 0)
                 {
                     if (!bCompareVarsion)
@@ -101,16 +100,12 @@ public class Updator : MonoBehaviour
                     }
                     else
                     {
-
                         DownloadDiffFile();
-
                         if (DiffFiles.Count == 0 && iLoadingFileNum == 0)
                         {
                             bUpdaterSuc = true;
                         }
                     }
-
-
                     //更新资源完成后最后刷新版本文件
                     if (bUpdaterSuc && iLoadingFileNum == 0 && !UpdateVersion)
                     {
@@ -118,7 +113,6 @@ public class Updator : MonoBehaviour
                         //更新版本文件和索引文件
                         //string strAndroid = "Android";
                         //string strmainfast = "Android.manifest";
-
                         string strPath = "/Android/";
                         string strRootFile = "Android";
                         string strRootmainfast = "Android.manifest";
@@ -144,15 +138,14 @@ public class Updator : MonoBehaviour
                         Debug.Log("开始下载:" + strVersionPath);
                         iLoadingFileNum++;
                         StartCoroutine(DownloadAndSave(strVersionPath, strVersion));
-
-
                     }
 
                     if (UpdateVersion && iLoadingFileNum == 0)
                     {
                         Debug.Log("更新完成！！");
                         OnLog("更新完成!");
-                        this.enabled = false;
+                        LuaManager.GetInstance().Init();
+                        enabled = false;
                         //gameObject.AddComponent<Load>();
                         //if (Application.platform == RuntimePlatform.Android)
                         {
@@ -186,7 +179,7 @@ public class Updator : MonoBehaviour
         }
     }
 
-    //IEnumerator
+    //读取本地的CRC表
     void LoadLocalCRCDic()
     {
         /*
@@ -205,7 +198,6 @@ public class Updator : MonoBehaviour
         LoadLocalCRCDic(strLocalCRC);
     }
 
-    //读取本地的CRC表
     void LoadLocalCRCDic(string filetext)
     {
         //TextAsset asset = (TextAsset)assetbundle.LoadAsset("Varsion", typeof(TextAsset));
@@ -230,6 +222,7 @@ public class Updator : MonoBehaviour
         }
     }
 
+    //读取服务器的CRC表
     IEnumerator LoadSeverCRCDic()
     {
         string strPath = "/Android/";
@@ -243,7 +236,6 @@ public class Updator : MonoBehaviour
         LoadSeverCRCDic(www.text);
     }
 
-    //读取本地的CRC表
     void LoadSeverCRCDic(string filetext)
     {
         //TextAsset asset = (TextAsset)assetbundle.LoadAsset("Varsion", typeof(TextAsset));
@@ -307,10 +299,8 @@ public class Updator : MonoBehaviour
         while (!www.isDone)
         {
             Loading = (((int)(www.progress * 100)) % 100) + "%";
-            if (Finish != null)
-            {
-                Finish(b, Loading);
-            }
+            Finish?.Invoke(b, Loading);
+
             yield return 1;
         }
         if (www.isDone)
@@ -319,10 +309,7 @@ public class Updator : MonoBehaviour
             Loading = "100%";
             byte[] bytes = www.bytes;
             b = SaveAssets(ResourceManager.GetInstance().GetResPath() + strPath, name, bytes);
-            if (Finish != null)
-            {
-                Finish(b, Loading);
-            }
+            Finish?.Invoke(b, Loading);
         }
     }
 
@@ -335,24 +322,23 @@ public class Updator : MonoBehaviour
     /// <param name="length"></param>
     public static bool SaveAssets(string path, string name, byte[] bytes)
     {
-        //string FullPath = path + "//" + name;
-        CheckDirectory(name);
+        string FullPath = path + "/" + name;
+        CheckDirectory(FullPath);
+        FileInfo t = new FileInfo(FullPath);
 
-        FileStream sw;
-        //FileInfo t = new FileInfo(path + "//" + name);
+
         try
         {
-            sw = new FileStream(path + "/" + name, FileMode.OpenOrCreate);
-            //sw = sw.Create();
+            FileStream sw = t.Create();
             sw.Write(bytes, 0, bytes.Length);
             sw.Close();
             sw.Dispose();
-
             iLoadingFileNum--;
-            Debug.Log(name + ":保存成功");
+            Debug.Log(name + ":保存成功\n\r路径" + FullPath);
             return true;
+
         }
-        catch( Exception ex)
+        catch (Exception ex)
         {
             Debug.Log(ex);
             return false;
@@ -391,6 +377,7 @@ public class Updator : MonoBehaviour
     static void CheckDirectory(string strFilePath)
     {
         int LastPos = strFilePath.LastIndexOf('/');
+
         string strPath = strFilePath.Remove(LastPos);   //获得文件路径
 
         if (!Directory.Exists(strPath))

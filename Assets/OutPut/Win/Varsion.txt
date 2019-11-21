@@ -1,3 +1,3 @@
 Varsion:1.0.0
-game_lua/init.data	2351433215
-game_lua/luastudy.lua.data	3269908399
+game_lua/init.data	289756144
+game_lua/luastudy.lua.data	1376455313

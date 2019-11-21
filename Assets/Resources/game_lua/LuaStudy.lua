@@ -7,7 +7,7 @@ function Main.Start()
     --go.name = "123"
     --local button = UnityEngine.GameObject.Find("Button")
     --EventTriggerListener.Get(button.gameObject).OnClickCall = "Main.Fire"
-    itemmaneger.Test()
+    --itemmaneger.Test()
 end
 
 function Main.Fire(gameobject)

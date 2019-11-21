@@ -1,7 +1,10 @@
 ManifestFileVersion: 0
-CRC: 2012112546
+CRC: 610446060
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
       Name: game_lua/init.data
+      Dependencies: {}
+    Info_1:
+      Name: game_lua/luastudy.lua.data
       Dependencies: {}

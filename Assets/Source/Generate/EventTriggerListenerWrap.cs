@@ -8,7 +8,7 @@ public class EventTriggerListenerWrap
 	{
 		L.BeginClass(typeof(EventTriggerListener), typeof(UnityEngine.MonoBehaviour));
 		L.RegFunction("Get", Get);
-		//L.RegFunction("OnSetLuaTable", OnSetLuaTable);
+		L.RegFunction("OnClick", OnClick);
 		L.RegFunction("OnPointerClick", OnPointerClick);
 		L.RegFunction("OnPointerDown", OnPointerDown);
 		L.RegFunction("OnPointerEnter", OnPointerEnter);
@@ -19,7 +19,6 @@ public class EventTriggerListenerWrap
 		L.RegFunction("OnBeginDrag", OnBeginDrag);
 		L.RegFunction("OnEndDrag", OnEndDrag);
 		L.RegFunction("OnDrag", OnDrag);
-		L.RegFunction("OnClick", OnClick);
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("onClick", get_onClick, set_onClick);
@@ -53,22 +52,22 @@ public class EventTriggerListenerWrap
 		}
 	}
 
-	/*[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnSetLuaTable(IntPtr L)
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int OnClick(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
 			EventTriggerListener obj = (EventTriggerListener)ToLua.CheckObject<EventTriggerListener>(L, 1);
-			LuaTable arg0 = ToLua.CheckLuaTable(L, 2);
-			obj.OnSetLuaTable(arg0);
+			UnityEngine.EventSystems.PointerEventData arg0 = (UnityEngine.EventSystems.PointerEventData)ToLua.CheckObject<UnityEngine.EventSystems.PointerEventData>(L, 2);
+			obj.OnClick(arg0);
 			return 0;
 		}
 		catch (Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e);
 		}
-	}*/
+	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int OnPointerClick(IntPtr L)
@@ -232,23 +231,6 @@ public class EventTriggerListenerWrap
 			EventTriggerListener obj = (EventTriggerListener)ToLua.CheckObject<EventTriggerListener>(L, 1);
 			UnityEngine.EventSystems.PointerEventData arg0 = (UnityEngine.EventSystems.PointerEventData)ToLua.CheckObject<UnityEngine.EventSystems.PointerEventData>(L, 2);
 			obj.OnDrag(arg0);
-			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int OnClick(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			EventTriggerListener obj = (EventTriggerListener)ToLua.CheckObject<EventTriggerListener>(L, 1);
-			UnityEngine.EventSystems.PointerEventData arg0 = (UnityEngine.EventSystems.PointerEventData)ToLua.CheckObject<UnityEngine.EventSystems.PointerEventData>(L, 2);
-			obj.OnClick(arg0);
 			return 0;
 		}
 		catch (Exception e)

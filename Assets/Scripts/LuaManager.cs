@@ -40,7 +40,6 @@ public class LuaManager : MonoBehaviour
     private void InitLuaFile()
     {
         TextAsset textAsset = null;
-        OnLog("Load Lua init");
         textAsset = Resources.Load<TextAsset>("game_lua/init");
         if (textAsset != null)
             LoadLuaInit(textAsset.text);
@@ -126,14 +125,6 @@ public class LuaManager : MonoBehaviour
         catch (Exception ex)
         {
             Debug.LogError("执行LUA方法失败!" + name);
-        }
-    }
-
-    public void OnLog(string strLog)
-    {
-        if (LogText != null)
-        {
-            LogText.text = strLog;
         }
     }
 }
