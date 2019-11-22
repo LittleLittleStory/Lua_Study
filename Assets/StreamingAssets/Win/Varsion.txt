@@ -1,3 +1,6 @@
 Varsion:1.0.0
-game_lua/init.data	289756144
-game_lua/luastudy.lua.data	1376455313
+game_lua/init.data	2351433215
+game_lua/luastudy.lua.data	2770320223
+prefabs/cube.data	2874481814
+prefabs/sphere.data	898694614
+luadebug.lua.data	1002809778

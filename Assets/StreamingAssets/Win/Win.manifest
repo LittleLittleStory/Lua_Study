@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 610446060
+CRC: 832379957
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -7,4 +7,13 @@ AssetBundleManifest:
       Dependencies: {}
     Info_1:
       Name: game_lua/luastudy.lua.data
+      Dependencies: {}
+    Info_2:
+      Name: prefabs/cube.data
+      Dependencies: {}
+    Info_3:
+      Name: prefabs/sphere.data
+      Dependencies: {}
+    Info_4:
+      Name: luadebug.lua.data
       Dependencies: {}

@@ -160,6 +160,7 @@ public static class CustomSettings
         _GT(typeof(Sprite)),
         _GT(typeof(SpriteRenderer)),
         _GT(typeof(EventSystem)),
+        _GT(typeof(ResourceManager)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

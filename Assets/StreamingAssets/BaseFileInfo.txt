@@ -1,0 +1,12 @@
+/Win/game_lua/init.data
+/Win/game_lua/init.data.manifest
+/Win/game_lua/luastudy.lua.data
+/Win/game_lua/luastudy.lua.data.manifest
+/Win/prefabs/cube.data
+/Win/prefabs/cube.data.manifest
+/Win/luadebug.lua.data
+/Win/luadebug.lua.data.manifest
+/Win/Varsion.txt
+/Win/Win
+/Win/Win.manifest
+/BaseFileInfo.txt

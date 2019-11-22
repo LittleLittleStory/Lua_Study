@@ -26,6 +26,7 @@ public class LuaManager : MonoBehaviour
     public void Init()
     {
         luaState = new LuaState();
+        luaState.AddSearchPath(Application.streamingAssetsPath + "/ToLua/Lua");
         luaState.Start();
         Bind();
         InitLuaFile();
@@ -40,17 +41,42 @@ public class LuaManager : MonoBehaviour
     private void InitLuaFile()
     {
         TextAsset textAsset = null;
-        textAsset = Resources.Load<TextAsset>("game_lua/init");
+        textAsset = ResourceManager.GetInstance().LoadtextAsset("game_lua/init");
         if (textAsset != null)
             LoadLuaInit(textAsset.text);
-        luaState.AddSearchPath(Application.dataPath + "/Resources/game_lua");
+
+        if (!ResourceManager.GetInstance().bLoadFromStream)
+            luaState.AddSearchPath(Application.dataPath + "/Resources/game_lua");
 
         foreach (var item in luaFileList)
         {
-            luaState.Require(item);
-            Debug.Log("初始化脚本:" + item);
+            if (ResourceManager.GetInstance().bLoadFromStream)
+            {
+                AssetBundle bundle = ResourceManager.GetInstance().LoadAssetBundle("game_lua/" + item + ".lua");
+                TextAsset text = bundle.LoadAsset(item + ".lua") as TextAsset;
+                luaState.DoString(text.text,"LuaManager.cs");
+                Debug.Log("AB:初始化脚本:" + item);
+            }
+            else
+            {
+                luaState.DoString(strGetLuaFileText(item), "LuaManager.cs");
+                Debug.Log("Resources:初始化脚本:" + item);
+            }
         }
+        Debug.Log("开始游戏逻辑");
         CallLuaFunction("Main.Start");
+    }
+    public string strGetLuaFileText(string strFileName)
+    {
+        strFileName = "game_lua/" + strFileName + ".lua";
+        TextAsset fileText = ResourceManager.GetInstance().LoadtextAsset(strFileName);
+        if (fileText != null)
+            return fileText.text;
+        else
+        {
+            Debug.Log(strFileName + " is null!!!!");
+            return "";
+        }
     }
 
     //读取lua的初始化配置

@@ -15,7 +15,7 @@ public class Updator : MonoBehaviour
     private static List<string> BaseResFiles = new List<string>();  //基础游戏资源
 
     //private string SeverPath = "file://D:/FTPUpdate";
-    private string SeverPath = "http://192.168.2.103/OutPut/";
+    private string SeverPath = "http://192.168.1.7/OutPut/";
 
     private bool bUpDateRes = true;    //是否检查更新(无外网测试时使用)
 
@@ -42,20 +42,21 @@ public class Updator : MonoBehaviour
     private Text LogText = null;
 
     private bool bOnCopyBaseFile = false;
-
     // private bool bUnZipRes = true;
 
     // Use this for initialization
     void Start()
     {
         var dec = ResourceManager.GetInstance().GetResPath();
-        Debug.Log("开始检查资源");
         if (ResourceManager.GetInstance().bLoadFromStream)
-        {
+        {;
+            Debug.Log("开始检查资源");
             CopyLoaclRes();
         }
         else
         {
+            Debug.Log("lua引擎初始化");
+            LuaManager.GetInstance().Init();
             this.enabled = false;
 
             //if(Application.platform == RuntimePlatform.Android)
@@ -142,8 +143,10 @@ public class Updator : MonoBehaviour
 
                     if (UpdateVersion && iLoadingFileNum == 0)
                     {
-                        Debug.Log("更新完成！！");
-                        OnLog("更新完成!");
+                        Debug.Log("更新完成!!");
+                        Debug.Log("加载游戏资源");
+                        ResourceManager.GetInstance().Init();
+                        Debug.Log("lua引擎初始化");
                         LuaManager.GetInstance().Init();
                         enabled = false;
                         //gameObject.AddComponent<Load>();
@@ -158,7 +161,7 @@ public class Updator : MonoBehaviour
                 else if (!bLinkServer)
                 {
                     //StartCoroutine(LoadLocalCRCDic());
-                    OnLog("检查资源更新!");
+                    Debug.Log("检查资源更新!");
                     LoadLocalCRCDic();
                     StartCoroutine(LoadSeverCRCDic());
                     bLinkServer = true;
@@ -166,7 +169,7 @@ public class Updator : MonoBehaviour
             }
             else
             {
-                OnLog("更新完成!");
+                Debug.Log("更新完成!");
                 this.enabled = false;
                 //gameObject.AddComponent<Load>();
                 //if (Application.platform == RuntimePlatform.Android)
@@ -390,7 +393,7 @@ public class Updator : MonoBehaviour
     //读取游戏基础资源
     void LoadBaseResList()
     {
-        OnLog("读取原始包资源！！");
+        Debug.Log("读取原始包资源！！");
         string sPath = "";
         if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
             sPath = "file://" + Application.streamingAssetsPath + "/" + "BaseFileInfo.txt";
@@ -399,16 +402,16 @@ public class Updator : MonoBehaviour
         WWW www = new WWW(sPath);
         while (!www.isDone) { }
 
-        LoadBaseResFiles(www.text);
+        //LoadBaseResFiles();
     }
 
-    void LoadBaseResFiles(string filetext)
+    void LoadBaseResFiles(AssetBundle assetBundle)
     {
-        //TextAsset asset = (TextAsset)assetbundle.LoadAsset("Varsion", typeof(TextAsset));
+        TextAsset asset = (TextAsset)assetBundle.LoadAsset("Varsion", typeof(TextAsset));
         BaseResFiles.Clear();
-        //if (asset != null)
+        if (asset != null)
         {
-            //string filetext = asset.text;
+            string filetext = asset.text;
             if (filetext != null)
             {
                 string[] Lines = filetext.Split('\n');
@@ -433,9 +436,9 @@ public class Updator : MonoBehaviour
         }
         var PersonPath = ResourceManager.GetInstance().GetResPath() + strPath;
         //如果不存在这个目录 就建立一个,并开始解压
-        if (/*!Directory.Exists(PersonPath)*/false)
+        if (!Directory.Exists(PersonPath))
         {
-            OnLog("开始解压！！");
+            Debug.Log("开始解压！！");
             bCopyBaseFiles = true;
             //读取游戏基础资源
             LoadBaseResList();
@@ -494,7 +497,6 @@ public class Updator : MonoBehaviour
         iCopyBaseFileNum++;
 
         Debug.Log("拷贝文件:" + name);
-        OnLog("拷贝文件：" + name);
 
         SaveBaseFile(www.bytes, dec);
 
@@ -529,15 +531,6 @@ public class Updator : MonoBehaviour
             }
         }
     }
-
-    public void OnLog(string strLog)
-    {
-        if (LogText != null)
-        {
-            LogText.text = strLog;
-        }
-    }
-
 }
 
 public class UpdatorLog
