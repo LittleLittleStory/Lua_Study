@@ -19,15 +19,12 @@ public class PatchBundle
     public static void BuildAssetBundle()
     {
         ClearAssetBundlesName();
-
         Pack(sourcePath);
-
         string outputPath = Path.Combine(AssetBundlesOutputPath, Platform.GetPlatformFolder(EditorUserBuildSettings.activeBuildTarget));
         if (!Directory.Exists(outputPath))
         {
             Directory.CreateDirectory(outputPath);
         }
-
         //根据BuildSetting里面所激活的平台进行打包 设置过AssetBundleName的都会进行打包
         BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.None, EditorUserBuildSettings.activeBuildTarget);
         AssetDatabase.Refresh();
@@ -37,9 +34,11 @@ public class PatchBundle
         EditorUtility.ClearProgressBar();
         AssetDatabase.Refresh();
         Debug.Log("刷新包完成");
-
     }
 
+    /// <summary>
+    /// 用来获取解压文件配置表暂时弃用
+    /// </summary>
     [MenuItem("Custom/LoadAllResFiles")]
     public static void LoadAllResFiles()
     {
@@ -51,60 +50,6 @@ public class PatchBundle
         WriteAllRedFileInfo();
         AssetDatabase.Refresh();
         Debug.Log("资源刷新完成");
-    }
-
-    ///  打包场景
-    ///
-    static void BuildScenes()
-    {
-        if (!Directory.Exists(Application.dataPath + "/OutPut/"+ Platform.GetPlatformFolder(EditorUserBuildSettings.activeBuildTarget) + "/scene"))
-        {
-            Directory.CreateDirectory(Application.dataPath + "/OutPut/"+ Platform.GetPlatformFolder(EditorUserBuildSettings.activeBuildTarget) + "/scene");
-        }
-        //获得场景文件夹下所有场景的名字
-        DirectoryInfo folder = new DirectoryInfo(Application.dataPath+ "/Scene");
-        FileSystemInfo[] files = folder.GetFileSystemInfos();
-        List<string> SceneList = new List<string>();
-        foreach (var item in files)
-        {
-            if (!item.Name.EndsWith(".meta"))
-            {
-                SceneList.Clear();
-                string dp = "Assets/Scene/" + item.Name;
-                AssetImporter assetImporter = AssetImporter.GetAtPath(dp);
-                if (assetImporter != null)
-                {
-                    string pathTmp = dp.Substring("Assets".Length + 1);
-                    //string assetName = pathTmp.Substring(pathTmp.IndexOf("/") + 1);
-                    string assetName = pathTmp.Replace(Path.GetExtension(pathTmp), ".unity3d");
-                    Debug.Log(assetName);
-                    assetImporter.assetBundleName = assetName;
-
-                    SceneList.Add(dp);
-                    string[] levels = SceneList.ToArray();
-                    string outPath = Application.dataPath+ "/OutPut/"+ Platform.GetPlatformFolder(EditorUserBuildSettings.activeBuildTarget) + assetName;
-                    BuildPipeline.BuildPlayer(levels, outPath, EditorUserBuildSettings.activeBuildTarget, BuildOptions.BuildAdditionalStreamedScenes);
-
-                    AssetDatabase.Refresh();
-                }
-            }
-        }
-        
-       // string[] levels = SceneList.ToArray();
-       // string outPath = AssetBundlesOutputPath + "/Scene"+".unity3d";
-       // BuildPipeline.BuildPlayer(levels, outPath, EditorUserBuildSettings.activeBuildTarget, BuildOptions.BuildAdditionalStreamedScenes);
-
-        AssetDatabase.Refresh();
-        /*
-        // 需要打包的场景名字
-        string[] levels = SceneList.ToArray();
-        // 注意这里【区别】通常我们打包，第2个参数都是指定文件夹目录，在此方法中，此参数表示具体【打包后文件的名字】
-        // 记得指定目标平台，不同平台的打包文件是不可以通用的。最后的BuildOptions要选择流格式
-        BuildPipeline.BuildPlayer(levels, Application.dataPath + "/Scene.unity3d", EditorUserBuildSettings.activeBuildTarget, BuildOptions.BuildAdditionalStreamedScenes);
-        // 刷新，可以直接在Unity工程中看见打包后的文件
-        AssetDatabase.Refresh();
-        */
-       
     }
 
     /// <summary>
@@ -152,7 +97,11 @@ public class PatchBundle
             }
         }
     }
-    //设置要打包的文件
+
+    /// <summary>
+    /// 设置需要打包的文件
+    /// </summary>
+    /// <param name="source"></param>
     static void fileWithDepends(string source)
     {
         Debug.Log("file source " + source);
@@ -182,13 +131,12 @@ public class PatchBundle
     }
 
     //设置要打包的文件
-    static void file(string source)
+    /*static void file(string source)
     {
         Debug.Log("file source " + source);
         string _source = Replace(source);
         string _assetPath = "Assets" + _source.Substring(Application.dataPath.Length);
         string _assetPath2 = _source.Substring(Application.dataPath.Length + 1);
-        //Debug.Log (_assetPath);
 
         //在代码中给资源设置AssetBundleName
         AssetImporter assetImporter = AssetImporter.GetAtPath(_assetPath);
@@ -202,14 +150,21 @@ public class PatchBundle
 
         Debug.Log(assetName);
         assetImporter.assetBundleName = assetName;
-    }
+    }*/
 
+    /// <summary>
+    /// 除去\\
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
     static string Replace(string s)
     {
         return s.Replace("\\", "/");
     }
 
-    //创建版本文件
+    /// <summary>
+    /// 创建版本文件路径StreamingAssets
+    /// </summary>
     static void CheckFileMD5ForStreamingAssets()
     {
         strDicFiles.Clear();
@@ -221,8 +176,9 @@ public class PatchBundle
             Debug.Log(item.Key + ":" + item.Value.ToString());
         }
     }
-
-    //创建版本文件
+    /// <summary>
+    /// 创建版本文件路径OutPut
+    /// </summary>
     static void CheckFileMD5()
     {
         strDicFiles.Clear();
@@ -235,6 +191,10 @@ public class PatchBundle
         }
     }
 
+    /// <summary>
+    /// 检查所有文件获取CEC并添加入字典
+    /// </summary>
+    /// <param name="strPath"></param>
     static void CheckCRC(string strPath)
     {
         DirectoryInfo folder = new DirectoryInfo(strPath);
@@ -248,32 +208,30 @@ public class PatchBundle
             }
             else if (IsFileType(files[i].Name, "data"))
             {
-                AssetBundle cubeBundle = AssetBundle.LoadFromFile(files[i].FullName);
                 uint crc = 0;
                 BuildPipeline.GetCRCForAssetBundle(files[i].FullName, out crc);
                 string strLoaclPath = Application.dataPath + "/" + "OutPut/" + Platform.GetPlatformFolder(EditorUserBuildSettings.activeBuildTarget) + "/";
-                //string strLoaclPath = Application.streamingAssetsPath + "/" + Platform.GetPlatformFolder(EditorUserBuildSettings.activeBuildTarget) + "/";
                 string strFilePath = Replace(files[i].FullName);
                 string FileName = strFilePath.Replace(strLoaclPath, "");
                 strDicFiles.Add(FileName, crc.ToString());
-                cubeBundle.Unload(true);
             }
             else if (IsFileType(files[i].Name, "unity3d"))
             {
-
-                //AssetBundle cubeBundle = AssetBundle.LoadFromFile(files[i].FullName);
                 string crc = GetMD5HashFromFile(files[i].FullName);
-                //BuildPipeline.GetCRCForAssetBundle(files[i].FullName, out crc);
-                string strLoaclPath = Application.streamingAssetsPath + "/"  + Platform.GetPlatformFolder(EditorUserBuildSettings.activeBuildTarget) + "/";
+                string strLoaclPath = Application.dataPath + "/" + "OutPut/" + Platform.GetPlatformFolder(EditorUserBuildSettings.activeBuildTarget) + "/";
                 string strFilePath = Replace(files[i].FullName);
                 string FileName = strFilePath.Replace(strLoaclPath, "");
                 strDicFiles.Add(FileName, crc);
-                //cubeBundle.Unload(true);
             }
         }
     }
 
-    //检查文件类型
+    /// <summary>
+    /// 检查文件类型
+    /// </summary>
+    /// <param name="strFileName"></param>
+    /// <param name="fileType"></param>
+    /// <returns></returns>
     static bool IsFileType(string strFileName,string fileType)
     {
         string [] strNames = strFileName.Split('.');
@@ -311,7 +269,9 @@ public class PatchBundle
         }
     }
 
-    //生成新的资源CRC表
+    /// <summary>
+    /// 生成新的资源CRC表路径OutPut
+    /// </summary>
     static void CreateFileCRC()
     {
         string strAssetPath = Application.dataPath + "/OutPut/";
@@ -332,7 +292,9 @@ public class PatchBundle
         fs.Close();
     }
 
-    //生成新的资源CRC表
+    /// <summary>
+    /// 生成新的资源CRC表路径StreamingAssets
+    /// </summary>
     static void CreateFileCRCForStreamingAssets()
     {
         string strAssetPath = Application.streamingAssetsPath + "/";
@@ -357,7 +319,10 @@ public class PatchBundle
         fs.Close();
     }
 
-    //读取资源包目录下所有文件
+    /// <summary>
+    /// 读取资源包目录下所有文件
+    /// </summary>
+    /// <param name="DirectoryPath"></param>
     static void LoadResAllFiles(string DirectoryPath)
     {
         DirectoryInfo folder = new DirectoryInfo(DirectoryPath);
@@ -381,6 +346,9 @@ public class PatchBundle
         }
     }
 
+    /// <summary>
+    /// 为BaseFileInfo写入资源文件
+    /// </summary>
     static void WriteAllRedFileInfo()
     {
         FileStream fs = new FileStream(Application.streamingAssetsPath + "/BaseFileInfo.txt", FileMode.Create);
@@ -389,9 +357,7 @@ public class PatchBundle
         foreach (var item in AllResFiles)
         {
             string lineData = "";
-            lineData = string.Format("{0}",
-                item
-                );
+            lineData = string.Format("{0}",item);
             sw.WriteLine(lineData);
         }
         sw.Flush();

@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 832379957
+CRC: 150044965
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -15,5 +15,5 @@ AssetBundleManifest:
       Name: prefabs/sphere.data
       Dependencies: {}
     Info_4:
-      Name: luadebug.lua.data
+      Name: scene/scenetest.unity3d
       Dependencies: {}

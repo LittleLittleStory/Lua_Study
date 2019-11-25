@@ -61,11 +61,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\EventTriggerListener.cs" />
+    <Compile Include="Assets\Scripts\Game.cs" />
     <Compile Include="Assets\Scripts\LuaManager.cs" />
     <Compile Include="Assets\Scripts\ResourceManager.cs" />
     <Compile Include="Assets\Scripts\Updator.cs" />
     <Compile Include="Assets\Source\Generate\DelegateFactory.cs" />
     <Compile Include="Assets\Source\Generate\EventTriggerListenerWrap.cs" />
+    <Compile Include="Assets\Source\Generate\GameWrap.cs" />
     <Compile Include="Assets\Source\Generate\LuaBinder.cs" />
     <Compile Include="Assets\Source\Generate\LuaInterface_DebuggerWrap.cs" />
     <Compile Include="Assets\Source\Generate\LuaInterface_InjectTypeWrap.cs" />
@@ -190,12 +192,10 @@
     <Compile Include="Assets\StreamingAssets\ToLua\Reflection\LuaMethod.cs" />
     <Compile Include="Assets\StreamingAssets\ToLua\Reflection\LuaProperty.cs" />
     <Compile Include="Assets\StreamingAssets\ToLua\Reflection\LuaReflection.cs" />
-    <None Include="Assets\Resources\LuaDebug.lua.txt" />
-    <None Include="Assets\StreamingAssets\Win\Varsion.txt" />
     <None Include="Assets\OutPut\Win\Varsion.txt" />
+    <None Include="Assets\StreamingAssets\Win\Varsion.txt" />
     <None Include="Assets\Resources\game_lua\LuaStudy.lua.txt" />
     <None Include="Assets\Resources\game_lua\init.txt" />
-    <None Include="Assets\StreamingAssets\BaseFileInfo.txt" />
     <None Include="Assets\StreamingAssets\ToLua\Injection\InjectionBridgeEditorInfo.xml" />
     <None Include="Assets\StreamingAssets\ToLua\readme.txt" />
     <None Include="Assets\StreamingAssets\ToLua\Injection\LuaInjectionSkipPaths.txt" />

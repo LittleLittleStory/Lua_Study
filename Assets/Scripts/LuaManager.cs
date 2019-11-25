@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using LuaInterface;
 using System;
 
+/// <summary>
+/// Lua管理类
+/// </summary>
 public class LuaManager : MonoBehaviour
 {
     static LuaManager instance;
@@ -23,6 +26,9 @@ public class LuaManager : MonoBehaviour
         }
         return instance;
     }
+    /// <summary>
+    /// Lua初始化操作
+    /// </summary>
     public void Init()
     {
         luaState = new LuaState();
@@ -31,6 +37,9 @@ public class LuaManager : MonoBehaviour
         Bind();
         InitLuaFile();
     }
+    /// <summary>
+    /// Lua虚拟机注册
+    /// </summary>
     protected virtual void Bind()
     {
         LuaBinder.Bind(luaState);
@@ -38,6 +47,9 @@ public class LuaManager : MonoBehaviour
         LuaCoroutine.Register(luaState, this);
     }
 
+    /// <summary>
+    /// 初始化Lua相关文件与脚本
+    /// </summary>
     private void InitLuaFile()
     {
         TextAsset textAsset = null;
@@ -66,6 +78,30 @@ public class LuaManager : MonoBehaviour
         Debug.Log("开始游戏逻辑");
         CallLuaFunction("Main.Start");
     }
+
+    /// <summary>
+    ///读取lua的初始化配置
+    /// </summary>
+    private void LoadLuaInit(string filetext)
+    {
+        luaFileList.Clear();
+        if (filetext != null)
+        {
+            string[] Lines = filetext.Split('\n');
+            for (int i = 0; i < Lines.Length; i++)
+            {
+                string strFileName = Lines[i].Replace(" ", "");
+                strFileName = strFileName.Replace("\r", "");
+                luaFileList.Add(strFileName);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 读取Lua脚本
+    /// </summary>
+    /// <param name="strFileName"></param>
+    /// <returns></returns>
     public string strGetLuaFileText(string strFileName)
     {
         strFileName = "game_lua/" + strFileName + ".lua";
@@ -78,52 +114,19 @@ public class LuaManager : MonoBehaviour
             return "";
         }
     }
+    /// <summary>
+    ///Lua方法执行
+    /// </summary>
+    /// <param name="name"></param>
 
-    //读取lua的初始化配置
-    private void LoadLuaInit(string filetext)
-    {
-        luaFileList.Clear();
-        if (filetext != null)
-        {
-            string[] Lines = filetext.Split('\n');
-            for (int i = 0; i < Lines.Length; i++)
-            {
-                string strFileName = Lines[i].Replace(" ", "");
-                strFileName = strFileName.Replace("\r", "");
-
-                luaFileList.Add(strFileName);
-            }
-        }
-    }
-    //Lua方法执行
     public void CallLuaFunction(string name)
-    {
-        LuaFunction function = luaState.GetFunction(name);
-        if (function != null)
-        {
-            function.Call();
-        }
-        else
-        {
-            Debug.LogError("没有找到lua方法!" + name);
-        }
-        try
-        {
-
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError("执行LUA方法失败!" + name + "原因" + ex);
-        }
-    }
-    public void CallLuaFunction(string name, params object[] args)
     {
         try
         {
             LuaFunction function = luaState.GetFunction(name);
             if (function != null)
             {
-                object[] res = function.Invoke<object[], object[]>(args);
+                function.Call();
             }
             else
             {
@@ -132,18 +135,23 @@ public class LuaManager : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogError("执行LUA方法失败!" + name);
+            Debug.LogError("执行LUA方法失败!" + name + "原因" + ex);
         }
     }
-    public void CallLuaFunction(string name, Array array)
+
+    /// <summary>
+    /// Lua执行方法泛型类
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="args"></param>
+    public void CallLuaFunction(string name, params object[] args)
     {
         try
         {
             LuaFunction function = luaState.GetFunction(name);
             if (function != null)
             {
-                function.Push(array);
-                function.Call();
+                object[] res = function.Invoke<object[], object[]>(args);
             }
             else
             {

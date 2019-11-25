@@ -9,12 +9,11 @@ public class ResourceManagerWrap
 		L.BeginClass(typeof(ResourceManager), typeof(System.Object));
 		L.RegFunction("GetInstance", GetInstance);
 		L.RegFunction("GetResPath", GetResPath);
-		L.RegFunction("Load", Load);
 		L.RegFunction("LoadtextAsset", LoadtextAsset);
+		L.RegFunction("Load", Load);
 		L.RegFunction("LoadAssetBundle", LoadAssetBundle);
 		L.RegFunction("LoadSprite", LoadSprite);
 		L.RegFunction("Init", Init);
-		L.RegFunction("LoadAssetBundleManifest", LoadAssetBundleManifest);
 		L.RegFunction("LoadScene", LoadScene);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("bLoadFromStream", get_bLoadFromStream, set_bLoadFromStream);
@@ -55,24 +54,6 @@ public class ResourceManagerWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Load(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 2);
-			ResourceManager obj = (ResourceManager)ToLua.CheckObject<ResourceManager>(L, 1);
-			string arg0 = ToLua.CheckString(L, 2);
-			UnityEngine.GameObject o = obj.Load(arg0);
-			ToLua.PushSealed(L, o);
-			return 1;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int LoadtextAsset(IntPtr L)
 	{
 		try
@@ -82,6 +63,24 @@ public class ResourceManagerWrap
 			string arg0 = ToLua.CheckString(L, 2);
 			UnityEngine.TextAsset o = obj.LoadtextAsset(arg0);
 			ToLua.Push(L, o);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int Load(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			ResourceManager obj = (ResourceManager)ToLua.CheckObject<ResourceManager>(L, 1);
+			string arg0 = ToLua.CheckString(L, 2);
+			UnityEngine.GameObject o = obj.Load(arg0);
+			ToLua.PushSealed(L, o);
 			return 1;
 		}
 		catch (Exception e)
@@ -135,23 +134,6 @@ public class ResourceManagerWrap
 			ResourceManager obj = (ResourceManager)ToLua.CheckObject<ResourceManager>(L, 1);
 			obj.Init();
 			return 0;
-		}
-		catch (Exception e)
-		{
-			return LuaDLL.toluaL_exception(L, e);
-		}
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int LoadAssetBundleManifest(IntPtr L)
-	{
-		try
-		{
-			ToLua.CheckArgsCount(L, 1);
-			ResourceManager obj = (ResourceManager)ToLua.CheckObject<ResourceManager>(L, 1);
-			UnityEngine.AssetBundleManifest o = obj.LoadAssetBundleManifest();
-			ToLua.Push(L, o);
-			return 1;
 		}
 		catch (Exception e)
 		{

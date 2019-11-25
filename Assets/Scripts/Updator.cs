@@ -5,7 +5,9 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-//版本检查，用于检查本地文件和服务器文件的CRC
+/// <summary>
+/// 版本检查，用于检查本地文件和服务器文件的CRC
+/// </summary>
 public class Updator : MonoBehaviour
 {
     private static Dictionary<string, string> strLocalDicFiles = new Dictionary<string, string>();   //本地CRC校验码表
@@ -42,39 +44,23 @@ public class Updator : MonoBehaviour
     private Text LogText = null;
 
     private bool bOnCopyBaseFile = false;
-    // private bool bUnZipRes = true;
 
-    // Use this for initialization
     void Start()
     {
         var dec = ResourceManager.GetInstance().GetResPath();
         if (ResourceManager.GetInstance().bLoadFromStream)
-        {;
+        {
             Debug.Log("开始检查资源");
-            CopyLoaclRes();
+            //CopyLoaclRes();
         }
         else
         {
             Debug.Log("lua引擎初始化");
             LuaManager.GetInstance().Init();
             this.enabled = false;
-
-            //if(Application.platform == RuntimePlatform.Android)
-            //    gameObject.AddComponent<TestABLoader>();
-            //else
-            // if (Application.platform == RuntimePlatform.Android)
-            //{
-            //    gameObject.AddComponent<TestABLoader>();
-            // }
-            //else
-            //    gameObject.AddComponent<Load>();
-            //ResourceManager.GetInstance().Init();
-            //gameObject.AddComponent<Load>();
-
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!bCopyBaseFiles)
@@ -112,8 +98,6 @@ public class Updator : MonoBehaviour
                     {
                         UpdateVersion = true;
                         //更新版本文件和索引文件
-                        //string strAndroid = "Android";
-                        //string strmainfast = "Android.manifest";
                         string strPath = "/Android/";
                         string strRootFile = "Android";
                         string strRootmainfast = "Android.manifest";
@@ -149,21 +133,13 @@ public class Updator : MonoBehaviour
                         Debug.Log("lua引擎初始化");
                         LuaManager.GetInstance().Init();
                         enabled = false;
-                        //gameObject.AddComponent<Load>();
-                        //if (Application.platform == RuntimePlatform.Android)
-                        {
-                            //gameObject.AddComponent<TestABLoader>();
-                        }
-                        // else
-                        //     gameObject.AddComponent<Load>();
                     }
                 }
                 else if (!bLinkServer)
                 {
-                    //StartCoroutine(LoadLocalCRCDic());
                     Debug.Log("检查资源更新!");
                     LoadLocalCRCDic();
-                    StartCoroutine(LoadSeverCRCDic());
+                    StartCoroutine(DownLoadSeverCRCDic());
                     bLinkServer = true;
                 }
             }
@@ -171,62 +147,52 @@ public class Updator : MonoBehaviour
             {
                 Debug.Log("更新完成!");
                 this.enabled = false;
-                //gameObject.AddComponent<Load>();
-                //if (Application.platform == RuntimePlatform.Android)
-                {
-                    //gameObject.AddComponent<TestABLoader>();
-                }
-                // else
-                //     gameObject.AddComponent<Load>();
             }
         }
     }
 
-    //读取本地的CRC表
+    /// <summary>
+    /// 根据平台设置路径
+    /// </summary>
     void LoadLocalCRCDic()
     {
-        /*
-        //"file://"
-        */
         string strPath = "/Android/";
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
             strPath = "/Win/";
         }
         string sPath = ResourceManager.GetInstance().GetResPath() + strPath + "Varsion.txt";
-        //WWW www = new WWW(sPath);
-        //yield return www;
         var strLocalCRC = File.ReadAllText(sPath);
-        // LoadLocalCRCDic(www.text);
         LoadLocalCRCDic(strLocalCRC);
     }
 
+    /// <summary>
+    /// 读取CRC配置表
+    /// </summary>
     void LoadLocalCRCDic(string filetext)
     {
-        //TextAsset asset = (TextAsset)assetbundle.LoadAsset("Varsion", typeof(TextAsset));
         strLocalDicFiles.Clear();
-        //if (asset != null)
+        if (filetext != null)
         {
-            //string filetext = asset.text;
-            if (filetext != null)
+            string[] Lines = filetext.Split('\n');
+            string[] ZeroItems = Lines[0].Split(':');
+            strLocalVarsion = ZeroItems[1];
+            for (int i = 1; i < Lines.Length; i++)
             {
-                string[] Lines = filetext.Split('\n');
-                string[] ZeroItems = Lines[0].Split(':');
-                strLocalVarsion = ZeroItems[1];
-                for (int i = 1; i < Lines.Length; i++)
-                {
-                    Lines[i] = Lines[i].Replace(" ", "");
-                    if (string.IsNullOrEmpty(Lines[i]))
-                        continue;
-                    string[] Items = Lines[i].Split('\t');
-                    strLocalDicFiles.Add(Items[0], Items[1]);
-                }
+                Lines[i] = Lines[i].Replace(" ", "");
+                if (string.IsNullOrEmpty(Lines[i]))
+                    continue;
+                string[] Items = Lines[i].Split('\t');
+                strLocalDicFiles.Add(Items[0], Items[1]);
             }
         }
     }
 
-    //读取服务器的CRC表
-    IEnumerator LoadSeverCRCDic()
+    /// <summary>
+    /// 下载服务器的CRC表
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DownLoadSeverCRCDic()
     {
         string strPath = "/Android/";
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
@@ -239,13 +205,12 @@ public class Updator : MonoBehaviour
         LoadSeverCRCDic(www.text);
     }
 
+    /// <summary>
+    /// 读取服务器的CRC表
+    /// </summary>
     void LoadSeverCRCDic(string filetext)
     {
-        //TextAsset asset = (TextAsset)assetbundle.LoadAsset("Varsion", typeof(TextAsset));
         strSeverDicFiles.Clear();
-        //if (asset != null)
-        {
-            //string filetext = asset.text;
             if (filetext != "")
             {
                 string[] Lines = filetext.Split('\n');
@@ -260,9 +225,11 @@ public class Updator : MonoBehaviour
                     strSeverDicFiles.Add(Items[0], Items[1]);
                 }
             }
-        }
     }
 
+    /// <summary>
+    /// CRC马的比较
+    /// </summary>
     void CompareCRC()
     {
         DiffFiles.Clear();
@@ -278,7 +245,7 @@ public class Updator : MonoBehaviour
 
 
     /// <summary>
-    /// 下载并保存资源到本地
+    /// 下载并保存资源
     /// </summary>
     /// <param name="url"></param>
     /// <param name="name"></param>
@@ -326,10 +293,10 @@ public class Updator : MonoBehaviour
     public static bool SaveAssets(string path, string name, byte[] bytes)
     {
         string FullPath = path + "/" + name;
+        Debug.Log("path:" + path);
+        Debug.Log("name:" + name);
         CheckDirectory(FullPath);
         FileInfo t = new FileInfo(FullPath);
-
-
         try
         {
             FileStream sw = t.Create();
@@ -348,7 +315,9 @@ public class Updator : MonoBehaviour
         }
     }
 
-    //从服务器下载有差异的文件
+    /// <summary>
+    ///从服务器下载有差异的文件
+    /// </summary>
     void DownloadDiffFile()
     {
         string strPath = "/Android/";
@@ -376,7 +345,10 @@ public class Updator : MonoBehaviour
         }
     }
 
-    //检查文件夹是否存在，如果不存在就创建
+    /// <summary>
+    /// 检查文件夹是否存在，如果不存在就创建
+    /// </summary>
+    /// <param name="strFilePath"></param>
     static void CheckDirectory(string strFilePath)
     {
         int LastPos = strFilePath.LastIndexOf('/');
@@ -390,7 +362,33 @@ public class Updator : MonoBehaviour
         }
     }
 
-    //读取游戏基础资源
+    //游戏第一次运行时解压资源数据至个人目录(!该步骤缺少本地文件校验步骤!)
+    /*void CopyLoaclRes()
+    {
+        string strPath = "/Android/";
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            strPath = "/Win/";
+        }
+        var PersonPath = ResourceManager.GetInstance().GetResPath() + strPath;
+        //如果不存在这个目录 就建立一个,并开始解压
+        if (!Directory.Exists(PersonPath))
+        {
+            Debug.Log("开始解压！！");
+            bCopyBaseFiles = true;
+            //读取游戏基础资源
+            LoadBaseResList();
+            CopyBaseFilesInfo();
+        }
+        else
+        {
+            bCopyBaseFiles = false;
+        }
+    }
+
+    /// <summary>
+    /// 读取游戏基础资源
+    /// </summary>
     void LoadBaseResList()
     {
         Debug.Log("读取原始包资源！！");
@@ -402,6 +400,7 @@ public class Updator : MonoBehaviour
         WWW www = new WWW(sPath);
         while (!www.isDone) { }
 
+        //因为缺少文件校验所以该功能未完善
         //LoadBaseResFiles();
     }
 
@@ -426,35 +425,11 @@ public class Updator : MonoBehaviour
         }
     }
 
-    //游戏第一次运行时解压资源数据至个人目录(!该步骤缺少本地文件校验步骤!)
-    void CopyLoaclRes()
-    {
-        string strPath = "/Android/";
-        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            strPath = "/Win/";
-        }
-        var PersonPath = ResourceManager.GetInstance().GetResPath() + strPath;
-        //如果不存在这个目录 就建立一个,并开始解压
-        if (!Directory.Exists(PersonPath))
-        {
-            Debug.Log("开始解压！！");
-            bCopyBaseFiles = true;
-            //读取游戏基础资源
-            LoadBaseResList();
-            CopyBaseFilesInfo();
-        }
-        else
-        {
-            bCopyBaseFiles = false;
-        }
-    }
     void CopyBaseFilesInfo()
     {
         StartCoroutine(CopyBaseFilesToPerDir());
-
-
     }
+
     IEnumerator CopyBaseFilesToPerDir()
     {
         int CurBaseFileIndex = 0;
@@ -493,13 +468,9 @@ public class Updator : MonoBehaviour
         var dec = ResourceManager.GetInstance().GetResPath() + name;
         WWW www = new WWW(sec);
         yield return www;
-
         iCopyBaseFileNum++;
-
         Debug.Log("拷贝文件:" + name);
-
         SaveBaseFile(www.bytes, dec);
-
         if (iCopyBaseFileNum == BaseResFiles.Count)
             bCopyBaseFiles = false;
         bOnCopyBaseFile = false;
@@ -508,12 +479,7 @@ public class Updator : MonoBehaviour
     void SaveBaseFile(byte[] bytes, string decDic)
     {
         string FullPath = decDic;
-
-        //获得该文件的全路径目录
-        //string FullPathDic = 
-
         CheckDirectory(FullPath);
-
         Stream sw;
         FileInfo t = new FileInfo(decDic);
         {
@@ -523,14 +489,13 @@ public class Updator : MonoBehaviour
                 sw.Write(bytes, 0, bytes.Length);
                 sw.Close();
                 sw.Dispose();
-
             }
-            catch
+            catch(Exception  ex)
             {
-                //return false;
+                Debug.Log(ex);
             }
         }
-    }
+    }*/
 }
 
 public class UpdatorLog

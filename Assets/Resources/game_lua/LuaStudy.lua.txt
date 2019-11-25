@@ -3,8 +3,7 @@ Main = {}
 local GameObject = UnityEngine.GameObject
 
 function Main.Start()
-    go = GameObject.Instantiate(ResourceManager.GetInstance():Load("prefabs/Sphere"))
-    go.transform.position = Vector3.zero
+    Game.GetGame():LoadScene("SceneTest")
     --go = GameObject('go')
     --go.name = "456"
     --local button = UnityEngine.GameObject.Find("Button")

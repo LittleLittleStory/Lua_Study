@@ -2,6 +2,9 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 using LuaInterface;
+/// <summary>
+/// UI事件类
+/// </summary>
 public class EventTriggerListener : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler,
 IPointerExitHandler, IPointerUpHandler, ISelectHandler, IUpdateSelectedHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
